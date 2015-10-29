@@ -137,7 +137,6 @@ class AmyCryptech {
     public AmyCryptech(String RSAPublicKeyFile) {
         this.BeriRSAPublicKey = getRSAPublicKey(RSAPublicKeyFile);
         this.sessionKey = generateSessionKey();
-        this.encryptedSessionKey = formEncryptedSessionKey();
     }
 
     // Decrypt Object, return plain text string
@@ -161,21 +160,13 @@ class AmyCryptech {
         try {
             // public key digest
             MessageDigest publicKeyDigest = MessageDigest.getInstance("MD5");
-            //publicKeyDigest.update("bryan".getBytes("ASCII"));
+            publicKeyDigest.update("bryan".getBytes("ASCII"));
             publicKeyDigest.update(publicKeyObject.getEncoded());
             byte[] keyDigest = publicKeyDigest.digest();
 
-            if (Arrays.equals(keyDigest, digestObject)) {
-                this.BryantRSAPublicKey = publicKeyObject;
-                return true;
-            } else {
-                return false;
-            }
-            /*
             Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-            cipher.init(Cipher.DECRYPT_MODE, this.BryantRSAPublicKey);
-            MessageDigest receivedDigest = (MessageDigest) digestObject.getObject(cipher);
-            byte[] msgDigest = receivedDigest.digest();
+            cipher.init(Cipher.DECRYPT_MODE, this.BeriRSAPublicKey);
+            byte[] msgDigest = cipher.doFinal(digestObject);
 
             if (Arrays.equals(keyDigest, msgDigest)) {
                 this.BryantRSAPublicKey = publicKeyObject;
@@ -183,7 +174,7 @@ class AmyCryptech {
             } else {
                 return false;
             }
-            */
+
 
         } catch (Exception e) {
             System.out.println("Error while retrieve public key");
@@ -195,6 +186,7 @@ class AmyCryptech {
 
     // Get the session key encrypted by RSA public key
     public SealedObject getEncryptedSessionKey() {
+        this.encryptedSessionKey = formEncryptedSessionKey();
         return this.encryptedSessionKey;
     }
 
@@ -207,7 +199,7 @@ class AmyCryptech {
             // getInstance(crypto algorithm/feedback mode/padding scheme)
             // Alice will use the same key/transformation
             Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-            cipher.init(Cipher.ENCRYPT_MODE, this.BeriRSAPublicKey);
+            cipher.init(Cipher.ENCRYPT_MODE, this.BryantRSAPublicKey);
             sessionKeyObj = new SealedObject(this.sessionKey.getEncoded(), cipher);
         } catch (GeneralSecurityException gse) {
             System.out.println("Error: wrong cipher to encrypt message");
