@@ -35,7 +35,7 @@ class AmySendEngine {
     private ObjectOutputStream toBryant;
     private ObjectInputStream fromBryant;
 
-    private final String OUTPUT_FILE = "Message_From_Bob.txt";
+    private final String OUTPUT_FILE = "msgs.txt";
     private final String BERI_PUB_KEY_FILE = "berisign.pub";
 
     private final int MSG_LEN = 10;

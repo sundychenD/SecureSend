@@ -33,7 +33,7 @@ class SendEngine {
     private ObjectOutputStream toBob;
     private ObjectInputStream fromBob;
 
-    private final String OUTPUT_FILE = "Message_From_Bob.txt";
+    private final String OUTPUT_FILE = "msgs.txt";
     private final String PUB_KEY_FILE = "bob.pub";
 
     private final int MSG_LEN = 10;
